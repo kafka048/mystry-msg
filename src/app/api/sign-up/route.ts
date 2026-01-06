@@ -19,7 +19,7 @@ export async function POST(request: Request){
         if(existingUserVerifiedByUserName){
             return Response.json({
                 success: false, // this success is for the signup request. since username already taken, the signup process wasn't a success.
-                message: "username is already taken"
+                message: "Username is already taken"
             }, { status: 400 })
         }
 
@@ -33,7 +33,7 @@ export async function POST(request: Request){
             if(existingUserByEmail.isVerified){
                 return Response.json({
                     success: false,
-                    message: "user already exists with this email"
+                    message: "A user already exists with this email."
                 }, { status: 400 })
             } else {
                 const hashedPassword = await bcrypt.hash(password, 10)
@@ -75,7 +75,8 @@ export async function POST(request: Request){
 
         return Response.json({
             success: true,
-            message: "user registered successfully. please verify your email"
+            message: `User registered successfully.
+            Please verify your email to continue.`
         }, { status: 201 })
 
         

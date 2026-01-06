@@ -40,7 +40,7 @@ const page = () => {
       email: "",
       password: "",
     },
-  });
+  }); // Validates the form if it follows the schema upon submission, and only then allows submit functon to work
 
   useEffect(() => {
     const checkUserNameUnique = async () => {
@@ -75,15 +75,19 @@ const page = () => {
         description: response.data.message,
       }); // basic success toast
 
-      router.replace(`/verify/${username}`);
-      setIsSubmitting(false);
+      setTimeout(() => {
+        router.replace(`/verify/${username}`);
+      }, 1200);
+      
     } catch (error) {
       console.error("error in signup of user", error);
       const axiosError = error as AxiosError<ApiResponse>;
       let errorMessage = axiosError.response?.data.message;
       toast("Error", {
-        description: "Something went wrong",
-      }); // study the 4 types of variants in sonner based toast
+        description: errorMessage,
+      }); 
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -119,6 +123,7 @@ const page = () => {
                         onChange={(e) => {
                           field.onChange(e);
                           setUsername(e.target.value);
+                          debounced(e.target.value);
                         }}
                         className="bg-neutral-900 border-neutral-800 text-neutral-100 placeholder:text-neutral-500"
                       />

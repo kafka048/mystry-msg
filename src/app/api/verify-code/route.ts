@@ -30,14 +30,14 @@ export async function POST(request: Request){
 
             return Response.json({
             success: true,
-            message: "account verified successfully"
+            message: "Your account was verified successfully."
             }, {
             status: 200
             })
         } else if (!isCodeNotExpired){
             return Response.json({
             success: false,
-            message: "verification code expired. please sign up again to get a new code"
+            message: "Your verification code had expired. Please sign up again to get a new code."
             }, {
             status: 400
             })

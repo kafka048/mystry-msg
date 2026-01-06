@@ -10,76 +10,72 @@ export const authOptions: NextAuthOptions = {
       id: "credentials",
       name: "Credentials",
       credentials: {
-        identifier: { label: "username or email", type: "text"}, 
+        identifier: { label: "username or email", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials: any): Promise<any> {
         await dbConnect();
-        try {
+        
           const user = await userModel.findOne({
             $or: [
               { email: credentials.identifier },
               { username: credentials.identifier },
             ],
-          }); // getting the user here through email OR the username
+          });
 
           if (!user) {
-            throw new Error("no user found with this email");
-            
+            throw new Error("Invalid Credentials.");
           }
-          if (!user.isVerified) {
-            throw new Error("please verify your account first");
-            
-          } 
+
           const isPasswordCorrect = await bcrypt.compare(
             credentials.password,
             user.password
-          )
-          if (isPasswordCorrect) {
-            return user
-          } else {
-            throw new Error("your password is incorrect")
-            
+          );
+          if (!isPasswordCorrect) {
+            throw new Error("Invalid Credentials.");
           }
-        } catch (error: any) {
-          throw new Error(error)
-          
+
+          const isUserVerified = user.isVerified;
+          if (!isUserVerified) {
+            throw new Error("Verify Yourself First.");
+          }
+
+          return user;
         }
-      }
-    })
+      }),
   ],
 
   callbacks: {
-     async jwt({ token, user }) { // the user defined here is returned by the credentialsprovider
-        if(user){
-            token._id = user._id?.toString()
-            token.username = user.username
-            token._isVerified = user.isVerified
-            token.isAcceptingMessages = user.isAcceptingMessages            
-        }
+    async jwt({ token, user }) {
+      // the user defined here is returned by the credentialsprovider
+      if (user) {
+        token._id = user._id?.toString();
+        token.username = user.username;
+        token._isVerified = user.isVerified;
+        token.isAcceptingMessages = user.isAcceptingMessages;
+      }
 
-      return token
-    }, 
+      return token;
+    },
 
-    async session({ session, token }){
-        if(token){
-            session.user._id = token._id
-            session.user.username = token.username
-            session.user.isVerified = token.isVerified
-            session.user.isAcceptingMessages = token.isAcceptingMessages
-        }
-      return session
-    }
-   
+    async session({ session, token }) {
+      if (token) {
+        session.user._id = token._id;
+        session.user.username = token.username;
+        session.user.isVerified = token.isVerified;
+        session.user.isAcceptingMessages = token.isAcceptingMessages;
+      }
+      return session;
+    },
   },
 
   pages: {
-    signIn: "/sign-in"
-  }, 
+    signIn: "/sign-in",
+  },
 
   session: {
-    strategy: "jwt"
+    strategy: "jwt",
   },
-  
-  secret: process.env.NEXTAUTH_SECRET
-}
+
+  secret: process.env.NEXTAUTH_SECRET,
+};
