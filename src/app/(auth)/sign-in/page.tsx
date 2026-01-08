@@ -16,7 +16,7 @@ import {
   FormControl,
   FormMessage,
 } from "@/src/components/ui/form";
-import { Input } from "@/src/components/input";
+import { Input } from "@/src/components/ui/input";
 import { Button } from "@/src/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -36,136 +36,130 @@ const signInPage = () => {
 
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
     setIsSubmitting(true);
-      const response = await signIn("credentials", {
-        redirect: false,
-        identifier: data.identifier,
-        password: data.password
-      })
-      if(!response?.ok){
-        toast("Error", {
-            description: response?.error ?? "Sign in failed",
-        })
-        setIsSubmitting(false);
-        return;
-      }
-
-      toast("Success", {
-        description: "Signed in successfully"
+    const response = await signIn("credentials", {
+      redirect: true,
+      identifier: data.identifier,
+      password: data.password,
+    });
+    if (!response?.ok) {
+      toast("Error", {
+        description: response?.error ?? "Sign in failed",
       });
+      setIsSubmitting(false);
+      return;
+    }
 
-      setTimeout(() => {
-        setIsSubmitting(false);
-        router.replace(`/user-dashboard`); // just for now.
-      }, 2000);
-    } 
-  
+    toast("Success", {
+      description: "Signed in successfully",
+    }); // this toast doesn't work when we let nextauth work the redirection
 
- return (
-  <main className="flex min-h-screen items-center justify-center bg-neutral-950 text-neutral-100">
-    <section className="w-full max-w-xl px-6">
-      {/* Header */}
-      <div className="text-center">
-        <h1 className="text-3xl font-semibold tracking-tight">
-          Mystery Message
-        </h1>
-        <p className="mt-3 text-sm text-neutral-400">
-          Sign in to access your private inbox.
-        </p>
-      </div>
+    setTimeout(() => {
+      setIsSubmitting(false);
+    }, 2000);
+  };
 
-      {/* Form */}
-      <div className="mt-8">
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4"
-          >
-            {/* Identifier */}
-            <FormField
-              name="identifier"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-xs text-neutral-400">
-                    Email or Username
-                  </FormLabel>
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-neutral-950 text-neutral-100">
+      <section className="w-full max-w-xl px-6">
+        {/* Header */}
+        <div className="text-center">
+          <h1 className="text-3xl font-semibold tracking-tight">
+            Mystery Message
+          </h1>
+          <p className="mt-3 text-sm text-neutral-400">
+            Sign in to access your private inbox.
+          </p>
+        </div>
 
-                  <FormControl>
-                    <Input
-                      {...field}
-                      className="bg-neutral-900 border-neutral-800 text-neutral-100 placeholder:text-neutral-600 focus-visible:ring-neutral-700"
-                    />
-                  </FormControl>
+        {/* Form */}
+        <div className="mt-8">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              {/* Identifier */}
+              <FormField
+                name="identifier"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs text-neutral-400">
+                      Email or Username
+                    </FormLabel>
 
-                  <FormDescription className="text-[11px] text-neutral-500">
-                    Your registered email or username.
-                  </FormDescription>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        className="bg-neutral-900 border-neutral-800 text-neutral-100 placeholder:text-neutral-600 focus-visible:ring-neutral-700"
+                      />
+                    </FormControl>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormDescription className="text-[11px] text-neutral-500">
+                      Your registered email or username.
+                    </FormDescription>
 
-            {/* Password */}
-            <FormField
-              name="password"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-xs text-neutral-400">
-                    Password
-                  </FormLabel>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                  <FormControl>
-                    <Input
-                      type="password"
-                      {...field}
-                      className="bg-neutral-900 border-neutral-800 text-neutral-100 placeholder:text-neutral-600 focus-visible:ring-neutral-700"
-                    />
-                  </FormControl>
+              {/* Password */}
+              <FormField
+                name="password"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs text-neutral-400">
+                      Password
+                    </FormLabel>
 
-                  <FormDescription className="text-[11px] text-neutral-500">
-                    Required to confirm account ownership.
-                  </FormDescription>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        {...field}
+                        className="bg-neutral-900 border-neutral-800 text-neutral-100 placeholder:text-neutral-600 focus-visible:ring-neutral-700"
+                      />
+                    </FormControl>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormDescription className="text-[11px] text-neutral-500">
+                      Required to confirm account ownership.
+                    </FormDescription>
 
-            {/* Submit */}
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="mt-2 w-full rounded-md bg-white px-5 py-2 text-sm font-medium text-black hover:bg-neutral-200 transition disabled:opacity-60"
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Submit */}
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="mt-2 w-full rounded-md bg-white px-5 py-2 text-sm font-medium text-black hover:bg-neutral-200 transition disabled:opacity-60"
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Authenticating</span>
+                  </div>
+                ) : (
+                  "Sign in"
+                )}
+              </Button>
+            </form>
+          </Form>
+
+          {/* Footer */}
+          <p className="mt-6 text-center text-sm text-neutral-400">
+            Having trouble signing in?{" "}
+            <Link
+              href="/forgot-password"
+              className="text-neutral-200 hover:underline"
             >
-              {isSubmitting ? (
-                <div className="flex items-center justify-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>Authenticating</span>
-                </div>
-              ) : (
-                "Sign in"
-              )}
-            </Button>
-          </form>
-        </Form>
-
-        {/* Footer */}
-        <p className="mt-6 text-center text-sm text-neutral-400">
-          Having trouble signing in?{" "}
-          <Link
-            href="/forgot-password"
-            className="text-neutral-200 hover:underline"
-          >
-            Reset your password
-          </Link>
-        </p>
-      </div>
-    </section>
-  </main>
-);
-
+              Reset your password
+            </Link>
+          </p>
+        </div>
+      </section>
+    </main>
+  );
 };
 
 export default signInPage;

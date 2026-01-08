@@ -11,7 +11,7 @@ import {
   FormControl,
   FormMessage,
 } from "@/src/components/ui/form";
-import { Input } from "@/src/components/input";
+import { Input } from "@/src/components/ui/input";
 import { Button } from "@/src/components/ui/button";
 import { Loader2 } from "lucide-react";
 import axios, { AxiosError } from "axios";
@@ -57,85 +57,79 @@ const verifyAccount = () => {
       toast("Error", {
         description: errorMessage,
       });
-    } 
+    }
   };
 
   return (
-  <main className="flex min-h-screen items-center justify-center bg-neutral-950 text-neutral-100">
-    <section className="w-full max-w-xl px-6">
-      {/* Header */}
-      <div className="text-center">
-        <h1 className="text-3xl font-semibold tracking-tight">
-          Mystery Message
-        </h1>
-        <p className="mt-3 text-sm text-neutral-400">
-          Enter the verification code sent to your email.
-        </p>
-      </div>
+    <main className="flex min-h-screen items-center justify-center bg-neutral-950 text-neutral-100">
+      <section className="w-full max-w-xl px-6">
+        {/* Header */}
+        <div className="text-center">
+          <h1 className="text-3xl font-semibold tracking-tight">
+            Mystery Message
+          </h1>
+          <p className="mt-3 text-sm text-neutral-400">
+            Enter the verification code sent to your email.
+          </p>
+        </div>
 
-      {/* Form */}
-      <div className="mt-8">
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4"
-          >
-            {/* Verification Code */}
-            <FormField
-              name="code"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-xs text-neutral-400">
-                    Verification Code
-                  </FormLabel>
+        {/* Form */}
+        <div className="mt-8">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              {/* Verification Code */}
+              <FormField
+                name="code"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs text-neutral-400">
+                      Verification Code
+                    </FormLabel>
 
-                  <FormControl>
-                    <Input
-                      {...field}
-                      className="bg-neutral-900 border-neutral-800 text-neutral-100 placeholder:text-neutral-600"
-                    />
-                  </FormControl>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        className="bg-neutral-900 border-neutral-800 text-neutral-100 placeholder:text-neutral-600"
+                      />
+                    </FormControl>
 
-                  <FormDescription className="text-[11px] text-neutral-500">
-                    Check your inbox (or spam folder).
-                  </FormDescription>
+                    <FormDescription className="text-[11px] text-neutral-500">
+                      Check your inbox (or spam folder).
+                    </FormDescription>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            {/* Submit */}
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="mt-2 w-full rounded-md bg-white px-5 py-2 text-sm font-medium text-black hover:bg-neutral-200 transition"
-            >
-              {isSubmitting ? (
-                <div className="flex items-center justify-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>Please wait</span>
-                </div>
-              ) : (
-                "Verify Account"
-              )}
-            </Button>
-          </form>
-        </Form>
+              {/* Submit */}
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="mt-2 w-full rounded-md bg-white px-5 py-2 text-sm font-medium text-black hover:bg-neutral-200 transition"
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Please wait</span>
+                  </div>
+                ) : (
+                  "Verify Account"
+                )}
+              </Button>
+            </form>
+          </Form>
 
-        {/* Footer hint */}
-        <p className="mt-6 text-center text-sm text-neutral-400">
-          Didn’t receive a code?{" "}
-          <span className="text-neutral-300">
-            Check spam or try again.
-          </span>
-        </p>
-      </div>
-    </section>
-  </main>
-);
-
+          {/* Footer hint */}
+          <p className="mt-6 text-center text-sm text-neutral-400">
+            Didn’t receive a code?{" "}
+            <span className="text-neutral-300">Check spam or try again.</span>
+          </p>
+        </div>
+      </section>
+    </main>
+  );
 };
 
 export default verifyAccount;

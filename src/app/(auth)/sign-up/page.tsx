@@ -19,7 +19,7 @@ import {
   FormControl,
   FormMessage,
 } from "@/src/components/ui/form";
-import { Input } from "@/src/components/input";
+import { Input } from "@/src/components/ui/input";
 import { Button } from "@/src/components/ui/button";
 import { Loader2 } from "lucide-react";
 
@@ -78,14 +78,13 @@ const page = () => {
       setTimeout(() => {
         router.replace(`/verify/${username}`);
       }, 1200);
-      
     } catch (error) {
       console.error("error in signup of user", error);
       const axiosError = error as AxiosError<ApiResponse>;
       let errorMessage = axiosError.response?.data.message;
       toast("Error", {
         description: errorMessage,
-      }); 
+      });
     } finally {
       setIsSubmitting(false);
     }

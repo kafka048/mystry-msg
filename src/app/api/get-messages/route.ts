@@ -36,7 +36,7 @@ export async function GET(request: Request){
         return Response.json(
         {
             success: false,
-            message: "user not found",
+            message: "There are no messages to display",
         },
         {
             status: 401,

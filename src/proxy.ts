@@ -19,11 +19,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/dashboard', request.url))
     
 
-  }
-        
-    
-
-  
+  }    
 } // this method is the middleware/proxy
  
 
